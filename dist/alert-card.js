@@ -112,5 +112,5 @@ import{LitElement as e,html as t,css as i}from"https://unpkg.com/lit-element/lit
         z-index: 1;
         margin-left: 30px;
       }
-    `}static getConfigElement(){return document.createElement("alert-card-editor")}static getStubConfig(){return{entity:"",title:"",image:""}}}),console.log("%c Notification Card %c 0.1.0","color: white; background: #039be5; font-weight: 700;","color: #039be5; background: white; font-weight: 700;");
+    `}static getConfigElement(){return document.createElement("alert-card-editor")}static getStubConfig(){return{entity:"",title:"",image:""}}}),console.log("%c Notification Card %c 0.1.1","color: white; background: #039be5; font-weight: 700;","color: #039be5; background: white; font-weight: 700;");
 //# sourceMappingURL=alert-card.js.map
