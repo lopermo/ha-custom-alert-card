@@ -1,6 +1,5 @@
 import { LitElement, html, css } from "https://unpkg.com/lit-element/lit-element.js?module";
 import "./alert-card-editor.js";
-const packageInfo = { version: "0.0.1" };
 
 class AlertCard extends LitElement {
   // The height of your card. Home Assistant uses this to automatically
@@ -191,7 +190,7 @@ class AlertCard extends LitElement {
 customElements.define("alert-card", AlertCard);
 
 console.log(
-  `%c AlertCard %c ${packageInfo.version}`,
+  `%c Notification Card %c ${__CARD_VERSION__}`,
   "color: white; background: #039be5; font-weight: 700;",
   "color: #039be5; background: white; font-weight: 700;",
 );
