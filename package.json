@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "eslint": "^9.30.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "prettier": "^3.6.2",
+    "sass": "^1.89.2",
+    "stylelint": "^16.21.1",
+    "stylelint-config-standard-scss": "^15.0.1",
+    "stylelint-scss": "^6.12.1"
+  },
+  "scripts": {
+    "build:sass": "sass src/alert-card.scss src/alert-card.css",
+    "lint": "eslint src --ext .js",
+    "lint:scss": "stylelint 'src/**/*.scss' --fix",
+    "format": "prettier --write \"src/**/*.{js,scss}\"",
+    "format:check": "prettier --check \"src/**/*.{js,scss}\""
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^10.1.5"
+  }
+}
