@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "https://unpkg.com/lit-element/lit-element.js?module";
+import { actionHandler } from "./action-handler.js";
 import "./alert-card-editor.js";
 
 class AlertCard extends LitElement {
@@ -18,6 +19,7 @@ class AlertCard extends LitElement {
   constructor() {
     super();
     this._config = {};
+    this.addEventListener("action", this._handleAction.bind(this));
   }
 
   setConfig(config) {
@@ -63,15 +65,26 @@ class AlertCard extends LitElement {
         }
       }
     }
-    const actionHandlerDirective = window.actionHandler
-      ? window.actionHandler({
+    return html`
+      <ha-card
+        @click=${(e) => {
+          console.log("ha-card clicked");
+          // Fallback: manually dispatch action event if actionHandler is not working
+          if (!e.detail || !e.detail.action) {
+            this.dispatchEvent(
+              new CustomEvent("action", {
+                detail: { action: "tap" },
+                bubbles: true,
+                composed: true,
+              }),
+            );
+          }
+        }}
+        .actionHandler=${actionHandler({
           hasHold: !!this._config.hold_action,
           hasDoubleClick: !!this._config.double_tap_action,
-        })
-      : undefined;
-
-    return html`
-      <ha-card @action=${this._handleAction} .actionHandler=${actionHandlerDirective} tabindex="0">
+        })}
+        tabindex="0">
         <div class="container">
           <div class="circle" style="background-color: ${this._config.icon_bg_color || "#f5f3eb"};">
             <img class="image" src="${this._config.image}" />
@@ -86,6 +99,7 @@ class AlertCard extends LitElement {
   }
 
   _handleAction(ev) {
+    console.log("Action event received", ev);
     if (!this._config || !this.hass) return;
     const action = ev.detail.action;
     let configAction;
@@ -97,51 +111,70 @@ class AlertCard extends LitElement {
       configAction = this._config.double_tap_action;
     }
     if (configAction) {
-      // Home Assistant's handleAction helper
+      // Use Home Assistant's handleAction helper if available
       if (window.handleAction) {
         window.handleAction(this, this.hass, this._config, action);
       } else {
-        // fallback: fire hass-action event
-        this.dispatchEvent(
-          new CustomEvent("hass-action", {
-            detail: { config: this._config, action },
-            bubbles: true,
-            composed: true,
-          }),
-        );
+        // Fallback for more-info
+        if (configAction.action === "more-info" && this._config.entity) {
+          this.dispatchEvent(
+            new CustomEvent("hass-more-info", {
+              detail: { entityId: this._config.entity },
+              bubbles: true,
+              composed: true,
+            }),
+          );
+        } else if (configAction.action === "call-service" && configAction.service) {
+          const [domain, service] = configAction.service.split(".");
+          this.hass.callService(domain, service, configAction.data || {}, configAction.target);
+        } else {
+          // fallback: fire hass-action event for other custom actions
+          this.dispatchEvent(
+            new CustomEvent("hass-action", {
+              detail: { config: this._config, action },
+              bubbles: true,
+              composed: true,
+            }),
+          );
+        }
       }
     }
   }
 
   static get styles() {
     return css`
-      :host {
-        display: block;
+      :host,
+      .type-custom-alert-card {
         overflow: hidden;
       }
 
       .title {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: 800;
+        letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
         line-height: 1;
-        color: #241d21;
+        color: var(--primary-text-color, #241d21);
         white-space: inherit;
       }
 
       .state {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 400;
+        line-height: 1;
       }
 
       .container {
         display: flex;
         flex-direction: column;
         padding: 20px 26px;
-        border-radius: 14px;
-        background-color: #f3ebf5;
-        min-height: 80px;
+        border-radius: var(--ha-card-border-radius, 14px);
+        background-color: var(--ha-card-background, #f3ebf5);
+      }
+      .container:hover {
+        background-color: var(--secondary-background-color, rgb(239, 226, 243));
+        cursor: pointer;
       }
       .content {
         padding-left: 80px;
@@ -164,6 +197,7 @@ class AlertCard extends LitElement {
         align-items: center;
         justify-content: center;
         padding: 20px;
+        pointer-events: none;
       }
       .image {
         height: 80%;

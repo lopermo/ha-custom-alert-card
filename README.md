@@ -58,8 +58,13 @@ Add to your dashboard using the UI editor or YAML:
 ## Development
 
 - Source: [`src/`](src/)
-- Build: `npm run build:sass` (for styles)
-- Deploy: See `deploy.sh`
+- Build: `npm run build` (bundles and prepares the card for Home Assistant)
+
+> **Note:** This card uses [custom-card-helpers](https://github.com/custom-cards/custom-card-helpers) for action handling compatibility with Home Assistant.
+
+## Deploy
+
+See `deploy.sh`
 
 ## License
 

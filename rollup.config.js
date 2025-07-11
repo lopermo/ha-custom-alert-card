@@ -1,6 +1,6 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import replace from "@rollup/plugin-replace";
 import json from "@rollup/plugin-json";
 import { readFileSync } from "fs";
@@ -21,7 +21,13 @@ export default {
       preventAssignment: true,
       __CARD_VERSION__: JSON.stringify(pkg.version),
     }),
-    resolve(),
+    resolve({
+      moduleDirectories: ["node_modules"],
+      extensions: [".js", ".mjs"],
+      preferBuiltins: false,
+      mainFields: ["module", "main"],
+      exportConditions: ["default", "module", "import"],
+    }),
     commonjs(),
     terser(),
   ],
