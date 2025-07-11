@@ -2,30 +2,59 @@
 
 A custom Lovelace card for Home Assistant to display the state of a room or entity at a glance, with customizable icon, image, and actions.
 
+---
+
 ## Features
 
-- Display entity state with custom image/icon
+- Display entity state with custom image or icon
 - Configurable colors and actions
 - Editor UI for easy configuration
+- Compatible with [custom-card-helpers](https://github.com/custom-cards/custom-card-helpers)
+
+---
 
 ## Installation
 
-### Manual
+### Manual Installation
 
-1. Download the latest `alert-card.js` from the [releases](https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/releases) page.
-2. Place it in your Home Assistant `www/alert-card/` directory (create if it doesn't exist).
-3. Add the following to your Lovelace resources:
+1. **Build the card**  
+   Run:
+
+   ```sh
+   npm install
+   npm run build
+   ```
+
+   This will generate `dist/alert-card.js`.
+
+2. **Copy to Home Assistant**  
+   Place `dist/alert-card.js` in your Home Assistant `www/alert-card/` directory (create it if it doesn't exist).
+
+3. **Add as a Lovelace resource**  
+   In Home Assistant, go to _Settings > Dashboards > Resources_ and add:
    ```yaml
    - url: /local/alert-card/alert-card.js
      type: module
    ```
 
-### HACS (Recommended)
+---
 
-1. Go to HACS > Frontend > Custom repositories.
-2. Add your repository URL and select "Lovelace" as the category.
-3. Install "Alert Card" from HACS.
-4. Add the resource automatically or manually as above.
+### HACS Installation (Recommended)
+
+1. **Repository Setup**
+   - In Home Assistant, go to _HACS > Frontend > Custom repositories_.
+   - Add your repository URL (e.g., `https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME`) and select "Lovelace" as the category.
+
+2. **Install the Card**
+   - Find "Alert Card" in HACS under Frontend and install it.
+
+3. **Add as a Lovelace resource**
+   - HACS may add the resource automatically. If not, add it manually as above.
+
+4. **Update**
+   - When you release a new version, users can update via HACS.
+
+---
 
 ## Usage
 
@@ -42,6 +71,8 @@ Add to your dashboard using the UI editor or YAML:
     action: more-info
 ```
 
+---
+
 ## Configuration Options
 
 | Name              | Type   | Required | Description                    |
@@ -55,16 +86,37 @@ Add to your dashboard using the UI editor or YAML:
 | hold_action       | object | no       | Action on hold                 |
 | double_tap_action | object | no       | Action on double tap           |
 
+---
+
 ## Development
 
-- Source: [`src/`](src/)
+- Source code: [`src/`](src/)
 - Build: `npm run build` (bundles and prepares the card for Home Assistant)
+- Lint: `npm run lint`
+- Format: `npm run format`
 
-> **Note:** This card uses [custom-card-helpers](https://github.com/custom-cards/custom-card-helpers) for action handling compatibility with Home Assistant.
+---
 
-## Deploy
+## Deploying to Home Assistant (Advanced/Manual)
 
-See `deploy.sh`
+You can use the provided `deploy.sh` script to copy the built card to a remote Home Assistant instance.  
+Edit the variables in `deploy.sh` to match your setup, then run:
+
+```sh
+./deploy.sh
+```
+
+---
+
+## Next Steps to Deploy to HACS
+
+1. **Push your latest code to GitHub.**
+2. **Tag a release** (e.g., `v0.1.0`) on GitHub.  
+   HACS will use your releases to provide updates to users.
+3. **Ensure your `hacs.json` is correct** (it should point to the built file, e.g., `dist/alert-card.js`).
+4. **Test installation via HACS** in your Home Assistant instance.
+
+---
 
 ## License
 

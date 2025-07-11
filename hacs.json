@@ -1,7 +1,7 @@
 {
   "name": "Notification Card",
   "content_in_root": false,
-  "filename": "src/alert-card.js",
+  "filename": "dist/alert-card.js",
   "domains": [],
   "country": "PL",
   "homeassistant": "2022.5.0"
